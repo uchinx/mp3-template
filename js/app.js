@@ -50,6 +50,17 @@ $(document).ready(function () {
 				app.sound.play();
 			}
 		}
+	});
+	$('.fa-step-forward').click(function () {
+		if (app.index == playlist.length - 1) return false;
+		app.index += 1;
+		app.get(app.index);
+
+	});
+	$('.fa-step-backward').click(function () {
+		if (app.index == 0) return false;
+		app.index -= 1;
+		app.get(app.index);
 	})
 	app.init();
 })
@@ -95,7 +106,9 @@ app.run = function () {
 		$('.singer').text(app.now.performer);
 		requestAnimationFrame(app.playing);
 	}
-	this.sound.on
+	this.sound.onended = function () {
+		
+	}
 	$('.background-player').css({
 		backgroundImage: 'url('+ this.now.artist.thumbnail +')'
 	})

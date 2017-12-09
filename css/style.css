@@ -82,7 +82,7 @@ audio {
     width: 100%;
     top: 0px;
     overflow: hidden;
-    background: rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.2);
 }
 .background-player {
 	position: absolute;
@@ -174,4 +174,17 @@ audio {
 }
 .float-right {
 	float: right !important;
+}
+
+@media all and (min-width: 480px) {
+	.body-player {
+		height: 66% !important;
+	}
+	.control-player {
+		height: 34% !important;
+	}
+	.music-player {
+		width: 100% !important;
+		height: 100% !important;
+	}
 }

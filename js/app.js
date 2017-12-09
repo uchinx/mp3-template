@@ -7,17 +7,35 @@ var config = {
 }
 var playlist = 
 	[{
-		name : 'Sống xa anh chẳng dễ dàng',
-		singer: 'Bảo Anh',
-		source: 'Music/sound.mp3',
-		image: 'img/hinh.jpg',
+		name : 'Reality',
+		singer: 'Lost Frequencies, Janieck Devy',
+		source: 'music/Reality.mp3',
+		image: 'img/lost.jpg',
 		howl: null
 
 	},{
 		name : 'Đã lỡ yêu em nhiều',
 		singer: 'JustaTee',
-		source: 'Music/em.mp3',
+		source: 'music/Da-Lo-Yeu-Em-Nhieu-JustaTee.mp3',
 		image: 'img/tee.jpg',
+		howl: null
+	},{
+		name : 'She Neva Knows',
+		singer: 'JustaTee',
+		source: 'music/She-Neva-Knows-JustaTee.mp3',
+		image: 'img/tee.jpg',
+		howl: null
+	},{
+		name : 'How Long',
+		singer: 'Charlie Puth',
+		source: 'music/HowLong-CharliePuth-5201892_hq.mp3',
+		image: 'img/Charlie_Puth_2.jpg',
+		howl: null
+	},{
+		name : 'Mặt trời của em',
+		singer: 'Phương Ly',
+		source: 'music/Mat-Troi-Cua-Em-Phuong-Ly-JustaTee.mp3',
+		image: 'img/20150518-060824-q_520x405.jpg',
 		howl: null
 	}]
 
@@ -76,7 +94,7 @@ app.init = function () {
 			onplay: function () {
 			$('.end-time').text(app.formatTime(Math.round(this.duration())));
 			$('.btn-play-pause')[0].className = 'btn-play-pause fa fa-pause';
-			$('.global-color').toggleClass('dark-color');
+			$('.global-color').addClass('dark-color');
 			$('.title-song').text(e.name);
 			$('.singer').text(e.singer);
 			$('.background-player').css({

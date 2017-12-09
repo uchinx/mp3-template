@@ -14,7 +14,7 @@ var config = {
 }
 var playlist = 
 		[
-			'kmJmtknNpduRSblymyFHkmykpZbcmdZhB',
+			'LGxHyZHNlSzldRstmybmkmtZWZbJkQNGR',
 			'kGcmyLHsCzvlVSVynTvmkGyLWLbxnJXdJ',
 			'kHJGyLHNhSdlHdLtnyFHZHtZpkvxmJaVN'
 

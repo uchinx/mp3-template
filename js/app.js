@@ -104,14 +104,17 @@ app.run = function () {
 		$('.end-time').text(app.formatTime(Math.floor(app.sound.duration)));
 		$('.title-song').text(app.now.name);
 		$('.singer').text(app.now.performer);
+		$('.background-player').css({
+			backgroundImage: 'url('+ app.now.artist.thumbnail +')'
+		})
 		requestAnimationFrame(app.playing);
 	}
 	this.sound.onended = function () {
-		
+		if (config.repeat) {
+
+		}
 	}
-	$('.background-player').css({
-		backgroundImage: 'url('+ this.now.artist.thumbnail +')'
-	})
+	
 }
 app.skip = function (i) {
 	

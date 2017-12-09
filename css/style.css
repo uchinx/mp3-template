@@ -176,7 +176,7 @@ audio {
 	float: right !important;
 }
 
-@media all and (min-width: 480px) {
+@media screen and (max-width: 480px) {
 	.body-player {
 		height: 66% !important;
 	}

@@ -14,12 +14,12 @@ var config = {
 }
 var playlist = 
 		[
-			'kGcmyLHsCzvlVSVynTvmkGyLWLbxnJXdJ',
 			'kmJmtknNpduRSblymyFHkmykpZbcmdZhB',
+			'kGcmyLHsCzvlVSVynTvmkGyLWLbxnJXdJ',
 			'kHJGyLHNhSdlHdLtnyFHZHtZpkvxmJaVN'
 
 		]
-
+var firstMT = true;
 $(document).ready(function () {
 	app.widthApp = $('.music-player').width();
 	$('.progress-duration').click(function (e) {
@@ -30,7 +30,22 @@ $(document).ready(function () {
 	$('.wrapper-info-song').mousedown(function (e) {
 		app.mouseDown = true;
 		app.currentPT =  (e.offsetX / app.widthApp * 100);
+	});
+	$('.wrapper-info-song')[0].addEventListener('touchmove', function (e) {
+		if (firstMT) {
+			currentX = e.changedTouches[0].clientX / app.widthApp * 100;
+			firstMT = false;
+		}
+		var phantram = ((e.changedTouches[0].clientX) / app.widthApp * 100);
+			phantram = phantram - currentX;
+			$('.wrapper-info-song')[0].style.left = Math.floor(phantram) +  '%';
+	});
+	
+	$('body')[0].addEventListener('touchend', function () {
+		firstMT = true;
+		$('.wrapper-info-song')[0].style.left = '0%';
 	})
+
 	$('body').mouseup(function (e) {
 		app.mouseDown = false;
 		$('.wrapper-info-song')[0].style.left = '0%';

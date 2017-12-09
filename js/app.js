@@ -16,7 +16,7 @@ var playlist =
 	},{
 		name : 'Đã lỡ yêu em nhiều',
 		singer: 'JustaTee',
-		source: 'https://doc-0s-4c-docs.googleusercontent.com/docs/securesc/76gevtl2jal0r06ljmjcpvvh3q1qvj08/rqaqmlslt2m1g789i3r3a1l5uptgr3rt/1512777600000/09013613773815185142/09013613773815185142/0B3R6qz7SPR-wZ3htOXN0aVZ5WE0?e=download&nonce=bm2j58lq31l90&user=09013613773815185142&hash=8pk86453vtsheur0m6616s92elmkru7i',
+		source: 'Music/em.mp3',
 		image: 'img/tee.jpg',
 		howl: null
 	}]

@@ -1,60 +1,65 @@
 var app = {
 	sound: null,
-	now: null,
+	now: [],
 	mouseDown: false,
 	currenPT: 0,
 	widthApp: 0,
-	index: 0
-};
-var config = {
-	repeat: false,
-	random: false,
-	volume: 100,
-	server: 'https://mp3.zing.vn/xhr/media/get-source?type=audio&key='
-}
-var playlist = 
+	index: 0,
+	slide: {
+		array: []
+	},
+	config: {
+		repeat: false,
+		random: false,
+		volume: 100,
+		server:
 		[
-			'LGxHyZHNlSzldRstmybmkmtZWZbJkQNGR',
-			'kGcmyLHsCzvlVSVynTvmkGyLWLbxnJXdJ',
-			'kHJGyLHNhSdlHdLtnyFHZHtZpkvxmJaVN'
-
+			'https://mp3.zing.vn/xhr/media/get-source?type=',
+			'&key='
 		]
-var firstMT = true;
+	},
+	firstMT: true,
+	stepType: ''
+};
+var playlist = {
+			type: 'album',
+			code: [
+				'kmxmTZGsVcEnJShTmTFHLHyZQZDiLhNkm',
+				'LnxHtZGsCzDABzdtmtvGZHTLQLDikgsDJ',
+				'kHxmykHshldQQRBTmtbHkntLQZFRkCaDJ'
+			]
+		}
 $(document).ready(function () {
 	app.widthApp = $('.music-player').width();
 	$('.progress-duration').click(function (e) {
-		var phantram = e.offsetX / app.widthApp * 100;
-			app.sound.currentTime = phantram * app.sound.duration / 100;
-			$('.play-progress-current')[0].style.width = phantram + '%';
+		var pt = e.offsetX / app.widthApp * 100;
+			app.sound.currentTime = pt * app.sound.duration / 100;
+			$('.play-progress-current')[0].style.width = pt + '%';
 	});
-	$('.wrapper-info-song').mousedown(function (e) {
+	$('.wrapper-info').mousedown(function (e) {
 		app.mouseDown = true;
 		app.currentPT =  (e.offsetX / app.widthApp * 100);
 	});
-	$('.wrapper-info-song')[0].addEventListener('touchmove', function (e) {
-		if (firstMT) {
+	$('.wrapper-info')[0].addEventListener('touchmove', function (e) {
+		if (app.firstMT) {
 			currentX = e.changedTouches[0].clientX / app.widthApp * 100;
-			firstMT = false;
+			app.firstMT = false;
 		}
-		var phantram = ((e.changedTouches[0].clientX) / app.widthApp * 100);
-			phantram = phantram - currentX;
-			$('.wrapper-info-song')[0].style.left = Math.floor(phantram) +  '%';
+		app.slide.slide(currentX, e.changedTouches[0].clientX)
 	});
 	
 	$('body')[0].addEventListener('touchend', function () {
-		firstMT = true;
-		$('.wrapper-info-song')[0].style.left = '0%';
+		app.firstMT = true;
+		app.slide.done();
 	})
 
 	$('body').mouseup(function (e) {
 		app.mouseDown = false;
-		$('.wrapper-info-song')[0].style.left = '0%';
+		app.slide.done();
 	})
-	$('.wrapper-info-song').mousemove(function (e) {
+	$('.wrapper-info').mousemove(function (e) {
 		if (app.mouseDown) {
-			var phantram = (e.offsetX / app.widthApp * 100);
-			phantram = phantram - app.currentPT;
-			$('.wrapper-info-song')[0].style.left = Math.floor(phantram) +  '%';
+			app.slide.slide(app.currentPT, e.offsetX);
 		}
 	});
 	$('.btn-play-pause').click(function () {
@@ -67,47 +72,89 @@ $(document).ready(function () {
 		}
 	});
 	$('.fa-step-forward').click(function () {
-		if (app.index == playlist.length - 1) return false;
-		app.index += 1;
-		app.get(app.index);
+		app.stepType = 'forward';
+		app.step();
 
 	});
 	$('.fa-step-backward').click(function () {
-		if (app.index == 0) return false;
-		app.index -= 1;
-		app.get(app.index);
+		app.stepType = 'backward';
+		app.step();
+	})
+	$('.fa-repeat').click(function () {
+		$('.fa-repeat').toggleClass('active-color');
+	})
+	$('.fa-random').click(function () {
+		$('.fa-random').toggleClass('active-color');
 	})
 	app.init();
 })
-
+//  format time 
 app.formatTime = function(secs) {
 	var minutes = Math.floor(secs / 60) || 0;
 	var seconds = (secs - minutes * 60) || 0;
 	minutes = (minutes < 10) ? '0' + minutes : minutes;
 	return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 }
-app.step = function () {
-	var seek = this.seek() || 0;
-	$('.play-progress-current')[0].style.width = (((seek / sound.duration()) * 100) || 0) + '%';
-	$('.current-time').text(this.formatTime(Math.round(seek)));
-	if (this.sound.playing()) {
-		requestAnimationFrame(this.step.bind(app));
-	}
-}
+
+// Initialize App when document ready
 app.init = function () {
 	if (playlist) {
 		this.sound = $('.myAudio')[0];
 		this.get(this.index);
 	}
+	var e = $('.slider').children();
+	for (var i = 0; i < e.length; i++) {
+		if ($(e[i]).hasClass('main-slide')) {
+			this.slide.main = i;
+		}
+		this.slide.array.push($(e[i]));
+	}
+	app.slide.render();
+
 }
+// loop when audio playing
+app.step = function () {
+	var len = 0;	
+	if (playlist.type == 'audio')
+		len = playlist.code.length;
+	else
+		len = this.now.length;
+	if (this.stepType == 'forward') {
+		if (this.index == len -1) return false;
+		if ($('.fa-random').hasClass('active-color')) {
+			this.index = Math.floor(Math.random() * len);
+		} else{
+			this.index += 1;			
+		}
+
+	} else {
+		if (this.index == 0) return false;
+		if ($('.fa-random').hasClass('active-color')) {
+			this.index = Math.floor(Math.random() * len);
+		} else{
+			this.index -= 1;			
+		}
+	}
+	if (playlist.type == 'audio')
+		this.get(this.index);
+	else
+		this.run(this.index);
+}
+// Get data from Zing Mp3
 app.get = function (i) {
-	$.get(config.server + playlist[i]).done(function (e) {
-		app.now = e.data;
-		app.run();
+	var i = i;
+	$.get(this.config.server[0] + playlist.type + this.config.server[1] + playlist.code[i]).done(function (e) {
+		if (playlist.type == 'audio') {
+		 	app.now.push(e.data);
+		} else {
+			app.now = e.data.items;
+		}
+		app.run(i);
 	});
 }
-app.run = function () {
-	this.sound.src = this.now.source['128'];
+// Run audio and initialize UI
+app.run = function (i) {
+	this.sound.src = this.now[i].source['128'];
 	this.sound.play();
 	this.sound.onplay = function () {
 		$('.btn-play-pause')[0].className = 'btn-play-pause fa fa-pause';
@@ -117,23 +164,45 @@ app.run = function () {
 	}
 	this.sound.onplaying = function () {
 		$('.end-time').text(app.formatTime(Math.floor(app.sound.duration)));
-		$('.title-song').text(app.now.name);
-		$('.singer').text(app.now.performer);
+		document.title = app.now[i].name + ' - ' + app.now[i].performer;
+		$('.title-song').text(app.now[i].name);
+		$('.singer').text(app.now[i].performer);
 		$('.background-player').css({
-			backgroundImage: 'url('+ app.now.artist.thumbnail +')'
+			backgroundImage: 'url('+ app.now[i].artist.thumbnail +')'
 		})
 		requestAnimationFrame(app.playing);
 	}
 	this.sound.onended = function () {
-		if (config.repeat) {
+		var index = 0;
+		if ($('.fa-repeat').hasClass('active-color')) {
+			app.sound.play();
+		} else {
+			if ($('.fa-random').hasClass('active-color')) {
+				if (playlist.type == 'audio'){
+					index = Math.floor(Math.random() * playlist.code.length -1);
+					app.index = index;
+					app.get(index);
+				}
+				else
+					index = Math.floor(Math.random() * app.now.length - 1);
+					app.index = index;
+					app.run(index);
+			} else {
+				app.stepType = 'forward';
+				app.step();				
+			}
 
 		}
+	},
+	this.sound.onabort = function () {
+		// $('.btn-play-pause')[0].className = 'btn-play-pause fa fa-play';
 	}
 	
 }
 app.skip = function (i) {
 	
 }
+// When plaing todo
 app.playing = function () {
 	var seek = app.sound.currentTime || 0;
 	var duration = app.sound.duration;
@@ -143,7 +212,31 @@ app.playing = function () {
 		requestAnimationFrame(app.playing);
 	}
 }
+// check playing
 app.isPlay = function () {
 	return !this.sound.paused;
 }
-//"//zmp3-mp3-s1.zadn.vn/0115d71e0c5ae504bc4b/4205179650957840805?authen=exp=1512885419~acl=/0115d71e0c5ae504bc4b/*~hmac=04171a76e714e64f33276425a3561bdf"
+
+app.slide.slide = function (c, x) {
+	var pt = ((x) / app.widthApp * 100);
+		pt = Math.floor(pt - c);
+		this.array.forEach(function (item, i) {
+			// item.css({
+			// 	'left': ((pt * (app.slide.main))) + '%'
+			// })
+			// console.log((pt + app.slide.main));
+		})
+		
+}
+app.slide.done = function () {
+	// $('.song-info')[0].style.left = '0%';
+	// $('.liric')[0].style.left = '100%';
+}
+app.slide.render = function () {
+	this.array.forEach(function (item, i) {
+		console.log((i - app.slide.main) * 100);
+		item.css({
+			'left': ((i - app.slide.main) * 100) + '%'
+		})
+	})
+}

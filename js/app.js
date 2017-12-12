@@ -19,14 +19,17 @@ var app = {
 		]
 	},
 	firstMT: true,
-	stepType: ''
+	stepType: '',
+	vActive: false,
+	vLast: 0
 };
 var playlist = {
 			type: 'album',
 			code: [
-				'kmxmTZGsVcEnJShTmTFHLHyZQZDiLhNkm',
-				'LnxHtZGsCzDABzdtmtvGZHTLQLDikgsDJ',
-				'kHxmykHshldQQRBTmtbHkntLQZFRkCaDJ'
+				'LmJHtLGRZpJdZiJyHyDmkntZQkbRimbCH',
+				'ZGcGtkmapAZpRNQymyFnLntZpLbRadJaB',
+				'ZGcGtLHsQzcvNmRyHtFHLHykQZDRNBVZC',
+				'kGcnTLHsWpGXJzvymybGLnyZQLbiadFEN'
 			]
 		}
 $(document).ready(function () {
@@ -85,9 +88,71 @@ $(document).ready(function () {
 	})
 	$('.fa-random').click(function () {
 		$('.fa-random').toggleClass('active-color');
+	});
+	$('.volume-btn').hover(function (e) {
+		if (e.type == 'mouseenter') {
+			app.vActive = true;
+			$('.volume-control').css({
+				'left': e.currentTarget.offsetLeft + (e.currentTarget.offsetWidth / 2 - 7) + 'px',
+				'display': 'block'
+			})
+		} else {
+			app.vActive = false;
+			setTimeout(function () {
+				if (app.vActive) return false;
+				$('.volume-control').css({
+					'display': 'none'
+				});
+			},1000)
+		}
+	});
+	$('.volume-control').hover(function (e) {
+		if (e.type == 'mouseenter') {
+			app.vActive = true;
+		} else {
+			app.vActive = false;
+			setTimeout(function () {
+				if (app.vActive) return false;
+				$('.volume-control').css({
+					'display': 'none'
+				});
+			},1000)
+		}
+	});
+	$('.wrapper-volume-control').click(function (e) {
+		var y = e.pageY - $(this).offset().top;
+		var w = $(this).height();
+		if (y <= 0) return false;
+		if (y >= w)  return false;
+		var py = (y / w * 100) - $('.circle-progress').height() / 2;
+		var pt = ((y / w * 100) - 100) * -1;
+		$('.circle-progress').css({
+			'top': py + '%'
+		})
+		app.sound.volume = app.constraint(pt/100, 0, 99);
+	});
+	$('.volume-btn').click(function (e) {
+		if ($(this).hasClass('fa-volume-up')) {
+			app.vLast = app.sound.volume;
+			app.sound.volume = 0;
+			$('.circle-progress').css({
+				'top': '100%'
+			})
+			$(this)[0].className = 'fa fa-volume-off volume-btn';
+		} else {
+			app.sound.volume = app.vLast;
+			$('.circle-progress').css({
+				'top': 100 - (app.vLast * 100) + '%'
+			})
+			$(this)[0].className = 'fa fa-volume-up volume-btn';
+		}
+	});
+	$('.circle-progress').mousedown(function (e) {
+		var y = e.pageY
+		console.log(y);
 	})
 	app.init();
-})
+});
 //  format time 
 app.formatTime = function(secs) {
 	var minutes = Math.floor(secs / 60) || 0;
@@ -112,7 +177,7 @@ app.init = function () {
 	app.slide.render();
 
 }
-// loop when audio playing
+// to source play change
 app.step = function () {
 	var len = 0;	
 	if (playlist.type == 'audio')
@@ -154,8 +219,10 @@ app.get = function (i) {
 }
 // Run audio and initialize UI
 app.run = function (i) {
-	this.sound.src = this.now[i].source['128'];
-	this.sound.play();
+	this.sound.src = 'http:' + this.now[i].source['128'];
+	this.sound.onloadeddata = function () {
+		app.sound.play();
+	}
 	this.sound.onplay = function () {
 		$('.btn-play-pause')[0].className = 'btn-play-pause fa fa-pause';
 	},
@@ -215,6 +282,15 @@ app.playing = function () {
 // check playing
 app.isPlay = function () {
 	return !this.sound.paused;
+}
+
+app.constraint = function (c, i, a) {
+	var r = c;
+	if (c < i)
+		r =  i;
+	if (c > a)
+		r =  a;
+	return r;
 }
 
 app.slide.slide = function (c, x) {

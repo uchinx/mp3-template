@@ -164,13 +164,18 @@ audio {
 	right: 0;
 	padding: 12px;
 }
-.play-custom-control > i {
+.play-custom-control i {
 	padding: 5px 31px;
     opacity: 0.9;
     cursor: pointer;
 }
-.play-custom-control > i:hover {
+.play-custom-control i:hover {
 	opacity: 0.5;
+}
+.wrapper-play-custom-control {
+	position: relative;
+	width: 100%;
+	height: 100%;
 }
 .play-progress {
 	position: absolute;
@@ -204,8 +209,35 @@ audio {
 	height: 100%;
 	overflow: hidden;
 }
-
-
+.volume-control  {
+	position: absolute;
+	width: 14px;
+	height: 80px;
+	top: -90px;
+	display: none;
+}
+.wrapper-volume-control {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+.progress-volume {
+	position: absolute;
+    width: 2px;
+    height: 100%;
+    margin: auto;
+    left: 0;
+    right: 0;
+    background: #000;
+}
+.circle-progress {
+	position: absolute;
+	width: 14px;
+    height: 14px;
+    background: #000;
+    border-radius: 50%;
+}
 
 @media screen and (max-width: 480px) {
 	.body-player {

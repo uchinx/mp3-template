@@ -26,7 +26,7 @@ var app = {
 var playlist = {
 			type: 'album',
 			code: [
-				'LmJHtLGRZpJdZiJyHyDmkntZQkbRimbCH',
+				'kmxHTLGGuZWuRTGTvHkHtLpLBdZQFgz',
 				'ZGcGtkmapAZpRNQymyFnLntZpLbRadJaB',
 				'ZGcGtLHsQzcvNmRyHtFHLHykQZDRNBVZC',
 				'kGcnTLHsWpGXJzvymybGLnyZQLbiadFEN'
@@ -219,7 +219,7 @@ app.get = function (i) {
 }
 // Run audio and initialize UI
 app.run = function (i) {
-	this.sound.src = 'http:' + this.now[i].source['128'];
+	this.sound.src = 'https:' + this.now[i].source['128'];
 	this.sound.onloadeddata = function () {
 		app.sound.play();
 	}

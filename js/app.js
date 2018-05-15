@@ -26,7 +26,7 @@ var app = {
 var playlist = {
 			type: 'album',
 			code: [
-				'LmxGTkHEapGVskNtntbHLmTZWvCmHuacA',
+				'ZmxHtZnniZQRutHtvGLHTkQFXSmAWFS',
 				'ZGcGtkmapAZpRNQymyFnLntZpLbRadJaB',
 				'ZGcGtLHsQzcvNmRyHtFHLHykQZDRNBVZC',
 				'kGcnTLHsWpGXJzvymybGLnyZQLbiadFEN'
